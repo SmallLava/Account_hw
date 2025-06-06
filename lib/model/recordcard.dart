@@ -12,4 +12,5 @@ class RecordCard {
     required this.isIncome,
     required this.type,
 });
+
 }
