@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:simple_calculator_flutter/simple_calculator_flutter.dart';
-
+// import 'package:simple_calculator_flutter/simple_calculator_flutter.dart';
+import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
 
 
 class Transaction extends StatefulWidget {
@@ -112,15 +112,27 @@ class _TransactionState extends State<Transaction> {
               color: Colors.grey,
             ),
 
-            Flexible(
-              child: Calculator(
-                backgroundColour: Colors.grey[200]!,
-                operationButtonColor: Colors.orange,
-                buttonColor: Colors.blueGrey,
-                buttonTextColor: Colors.white,
-                operationButtonTextColor: Colors.black,
-                resultTextColor: Colors.black45,
-              ),
+            Expanded(
+              child:
+              // Calculator(
+              //   backgroundColour: Colors.grey[200]!,
+              //   operationButtonColor: Colors.orange,
+              //   buttonColor: Colors.blueGrey,
+              //   buttonTextColor: Colors.white,
+              //   operationButtonTextColor: Colors.black,
+              //   resultTextColor: Colors.black,
+              // ),
+              SimpleCalculator(
+                value: 123.45,
+                hideExpression: true,
+                onChanged: (key, value, expression) {
+                  // 處理計算結果
+                },
+                theme: const CalculatorThemeData(
+                  displayColor: Colors.black,
+                  displayStyle: TextStyle(fontSize: 80, color: Colors.yellow),
+                ),
+              )
             )
 
 
