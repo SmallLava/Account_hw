@@ -64,7 +64,6 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Monthly Expenses',
                   style: TextStyle(
-                    color: Colors.red,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -88,7 +87,6 @@ class HomePage extends StatelessWidget {
                 Text(
                   'Monthly Income',
                   style: TextStyle(
-                    color: Colors.green,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -119,7 +117,7 @@ class HomePage extends StatelessWidget {
                 margin: EdgeInsets.only(bottom: 16),
                 padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white30,
                   border: Border.all(color: Colors.grey.shade600, width: 2),
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
