@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 
-import './view/Transaction.dart';
-void main() => runApp(MaterialApp(home: Transaction()));
 
 
-// void main() => runApp(MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
