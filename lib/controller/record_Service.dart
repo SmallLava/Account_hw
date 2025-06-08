@@ -3,6 +3,8 @@ import '../model/recordcard.dart';
 class RecordService {
   final List<RecordCard> _record = [
     RecordCard(dateTime: DateTime.now(), name: "Coffee", price: 100, isIncome: false, type: "Drink"),
+    RecordCard(dateTime: DateTime.now(), name: "Lunch", price: 200, isIncome: false, type: "Food"),
+    RecordCard(dateTime: DateTime.now(), name: "Salary", price: 1000, isIncome: true, type: "Salary"),
   ];
 
   List<RecordCard> get record => _record;
