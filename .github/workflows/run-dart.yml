@@ -1,0 +1,20 @@
+name: Run Dart Script with Secret
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-dart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Run Dart script with secret
+        env:
+          API_TOKEN: ${{ secrets.gemini_token }}
+        run: dart main.dart
