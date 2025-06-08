@@ -1,0 +1,29 @@
+name: Flutter CI with Secret
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.6' # 根據你的版本調整
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Inject API_TOKEN into secret_config.dart
+        run: echo "const apiToken = '${{ secrets.gemini_token }}';" > lib/secret_config.dart
+
+      - name: Run analyzer
+        run: flutter analyze
+
+      - name: Run tests (if any)
+        run: flutter test
