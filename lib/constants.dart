@@ -4,7 +4,7 @@ const List<String> income = [
   "Passive",
 ];
 
-const List<String> Expense = [
+const List<String> expense = [
   "Traffic",
   "Luxury",
   "Drink",

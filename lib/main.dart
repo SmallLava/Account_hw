@@ -1,57 +1,38 @@
+import 'package:account_hw/controller/SpeechService.dart';
+import 'package:account_hw/controller/record_Service.dart';
 import 'package:flutter/material.dart';
+import 'view/Transaction.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Budget App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Account'),
-          centerTitle: true,
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: HomePage(
-            expenses: 1234.56,
-            income: 3000.00,
-          ),
-        ),
-      ),
+      home: HomePage(),
+      theme: ThemeData.dark(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  final double expenses;
-  final double income;
-
-  HomePage({
-    Key? key,
-    required this.expenses,
-    required this.income,
-  }) : super(key: key);
-
-  final Map<String, List<Map<String, dynamic>>> recordsByDate = {
-    '2025/06/06': [
-      {'type': 'expense', 'item': 'Coffee', 'amount': 80},
-      {'type': 'expense', 'item': 'Lunch', 'amount': 150},
-      {'type': 'income', 'item': 'Part-time job', 'amount': 500},
-    ],
-    '2025/06/05': [
-      {'type': 'expense', 'item': 'Groceries', 'amount': 320},
-      {'type': 'expense', 'item': 'Transport', 'amount': 60},
-    ],
-  };
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> sortedDates = recordsByDate.keys.toList()
-      ..sort((a, b) => b.compareTo(a)); // 最新日期在上方
+  State<HomePage> createState() => _HomePageState();
+}
 
-    return Column(
+class _HomePageState extends State<HomePage> {
+  final RecordService _record = RecordService();
+  final SpeechService _speech = SpeechService();
+  int _currentIndex = 0;
+
+  List<Widget> get _pages => [
+    Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 🔺 顯示月支出/收入
@@ -69,7 +50,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '\$${expenses.toStringAsFixed(2)}',
+                  _record.getExpense().toString(),
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -92,7 +73,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '\$${income.toStringAsFixed(2)}',
+                  _record.getIncome().toString(),
                   style: TextStyle(
                     color: Colors.green,
                     fontSize: 18,
@@ -102,16 +83,12 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-
         SizedBox(height: 20),
-
-        // 🔽 記錄清單（每日一個Container）
+        // 🔽 記錄清單（每筆資料一個Container）
         Expanded(
           child: ListView.builder(
-            itemCount: sortedDates.length,
+            itemCount: _record.record.length,
             itemBuilder: (context, index) {
-              final date = sortedDates[index];
-              final records = recordsByDate[date]!;
 
               return Container(
                 margin: EdgeInsets.only(bottom: 16),
@@ -133,33 +110,32 @@ class HomePage extends StatelessWidget {
                   children: [
                     // 日期
                     Text(
-                      date,
+                      DateFormat('yyyy-MM-dd').format(_record.record[index].dateTime),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Divider(thickness: 1.5),
-
-                    // 記錄清單
-                    ...records.map((record) {
-                      final isExpense = record['type'] == 'expense';
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(
-                          isExpense ? Icons.remove : Icons.add,
-                          color: isExpense ? Colors.red : Colors.green,
-                        ),
-                        title: Text(record['item']),
-                        trailing: Text(
-                          '${isExpense ? '-' : '+'}\$${record['amount']}',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            _record.record[index].name,
                           style: TextStyle(
-                            color: isExpense ? Colors.red : Colors.green,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    }).toList(),
+                        Text(
+                          '${_record.record[index].isIncome ? '+' : '-'}\$${_record.record[index].price}',
+                          style: TextStyle(
+                            color: _record.record[index].isIncome ? Colors.green : Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               );
@@ -167,6 +143,57 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ],
+    ),
+    Transaction(),
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    await _speech.initSpeech();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _speech.listening((text) async{
+
+          });
+        },
+      ),
+      appBar: AppBar(title: const Text("Account"),),
+      body: _pages[_currentIndex],
+
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.countertops),
+            label: 'counter'
+          )
+        ],
+      ),
     );
   }
 }
+
+// Icon(
+// isExpense ? Icons.remove : Icons.add,
+// color: isExpense ? Colors.red : Colors.green,
+// ),

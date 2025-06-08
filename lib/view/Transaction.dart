@@ -5,7 +5,7 @@ import 'package:simple_calculator_flutter/simple_calculator_flutter.dart';
 
 
 class Transaction extends StatefulWidget {
-  Transaction({super.key});
+  const Transaction({super.key});
 
   @override
   State<Transaction> createState() => _TransactionState();
