@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:account_hw/controller/record_Service.dart';
+import 'package:provider/provider.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,10 +11,12 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final RecordService _record = RecordService();
 
   @override
   Widget build(BuildContext context) {
+    final recordService = Provider.of<RecordService>(context);
+    final records = recordService.getAll();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -32,7 +35,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
                 Text(
-                  _record.getExpense().toString(),
+                  recordService.getExpense().toString(),
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -55,7 +58,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
                 Text(
-                  _record.getIncome().toString(),
+                  recordService.getIncome().toString(),
                   style: TextStyle(
                     color: Colors.green,
                     fontSize: 18,
@@ -69,9 +72,9 @@ class _HomepageState extends State<Homepage> {
         // 🔽 記錄清單（每筆資料一個Container）
         Expanded(
           child: ListView.builder(
-            itemCount: _record.record.length,
+            itemCount: records.length,
             itemBuilder: (context, index) {
-
+              final item = records[index];
               return Container(
                 margin: EdgeInsets.only(bottom: 16),
                 padding: EdgeInsets.all(12),
@@ -92,7 +95,7 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     // 日期
                     Text(
-                      DateFormat('yyyy-MM-dd').format(_record.record[index].dateTime),
+                      DateFormat('yyyy-MM-dd').format(item.dateTime),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -103,16 +106,16 @@ class _HomepageState extends State<Homepage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _record.record[index].name,
+                          item.name,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          '${_record.record[index].isIncome ? '+' : '-'}\$${_record.record[index].price}',
+                          '${item.isIncome ? '+' : '-'}\$${item.price}',
                           style: TextStyle(
-                            color: _record.record[index].isIncome ? Colors.green : Colors.red,
+                            color: item.isIncome ? Colors.green : Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -1,11 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 import '../model/recordcard.dart';
 
-class RecordService {
-  final List<RecordCard> _record = [
-    RecordCard(dateTime: DateTime.now(), name: "Coffee", price: 100, isIncome: false, type: "Drink"),
-    RecordCard(dateTime: DateTime.now(), name: "Lunch", price: 200, isIncome: false, type: "Food"),
-    RecordCard(dateTime: DateTime.now(), name: "Salary", price: 1000, isIncome: true, type: "Salary"),
-  ];
+class RecordService extends ChangeNotifier {
+  final List<RecordCard> _record = [];
 
   List<RecordCard> get record => _record;
 
@@ -13,6 +11,7 @@ class RecordService {
     _record.add(
       RecordCard(dateTime: date, name: name, price: price, isIncome: isIncome, type: type)
     );
+    notifyListeners();
   }
 
   int getIncome() {
@@ -34,4 +33,6 @@ class RecordService {
     }
     return sum;
   }
+  //測試List是否成功加入資料用
+  List<RecordCard> getAll() => _record;
 }
