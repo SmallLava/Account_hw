@@ -20,6 +20,7 @@ class SpeechService {
             onResult(_text);
           }
         },
+        localeId: 'zh-TW',
         listenOptions: SpeechListenOptions(
           partialResults: true,
           cancelOnError: true,
