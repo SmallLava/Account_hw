@@ -1,6 +1,6 @@
-import 'package:account_hw/controller/SpeechService.dart';
+import 'package:account_hw/controller/speech_service.dart';
 import 'package:account_hw/controller/gemini_connect.dart';
-import 'package:account_hw/controller/record_Service.dart';
+import 'package:account_hw/controller/record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'view/transaction.dart';
