@@ -1,17 +1,12 @@
-import 'package:account_hw/controller/SpeechService.dart';
-import 'package:account_hw/controller/gemini_connect.dart';
-import 'package:account_hw/controller/record_Service.dart';
+import 'package:account_hw/controller/speech_service.dart';
+import 'package:account_hw/controller/gemini_service.dart';
+import 'package:account_hw/controller/record_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'view/transaction.dart';
 import 'view/home_page.dart';
 
-void main() => runApp(
-  ChangeNotifierProvider(
-    create: (_) => RecordService(),
-    child: MyApp(),
-  )
-);
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -20,7 +15,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Budget App',
-      home: HomePage(),
+      home:
+      ChangeNotifierProvider(
+        create: (_) => RecordService(),
+        child: HomePage(),
+      ),
       theme: ThemeData.dark(),
     );
   }
@@ -58,6 +57,17 @@ class _HomePageState extends State<HomePage> {
         onPressed: () async {
           String recognizedText = "";
 
+          await showDialog(context: context, builder: (_) => AlertDialog(
+            title: Center(child: Text('使用說明')),
+            content: Text('請清楚說明包含[時間、行為、花費]的語句'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text('開始聆聽'),
+              )
+            ],
+          ));
+
           _speech.listening((text) async {
             recognizedText = text;
 
@@ -83,20 +93,31 @@ class _HomePageState extends State<HomePage> {
             );
             if (confirmed == true) {
               final output = await _gemini.sendToGemini(recognizedText);
-              Provider.of<RecordService>(context, listen: false).addCard(
-              date: DateTime.parse(output['date']),
-                name: output['title'],
-                price: output['price'],
-                isIncome: output['isIncome'],
-                type: output['type'],
-              );
-
+              if(output['title'] == null || output['price'] == null || output['date'] == null || output['isIncome'] == null || output['type'] == null) {
+                showDialog(context: context, builder: (_) => AlertDialog(
+                  title: Center(child: Text('辨識失敗 請重試')),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('離開'),
+                    )
+                  ],
+                ));
+              } else {
+                Provider.of<RecordService>(context, listen: false).addCard(
+                  date: DateTime.parse(output['date']),
+                  name: output['title'],
+                  price: output['price'],
+                  isIncome: output['isIncome'],
+                  type: output['type'],
+                );
+              }
             }
           });
         },
         child: Icon(Icons.mic),
       ),
-      appBar: AppBar(title: const Text("Account")),
+      appBar: AppBar(title: Center(child: const Text("Account"))),
       body: _pages[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(

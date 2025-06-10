@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
-import '../model/recordcard.dart';
+import '../model/record_card.dart';
 
 class RecordService extends ChangeNotifier {
   final List<RecordCard> _record = [];
