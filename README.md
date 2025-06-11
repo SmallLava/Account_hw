@@ -1,16 +1,14 @@
-# account_hw
+# A account app
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+It's now only work on android & IOS though...
+---
+## Feature
+- Can use speech add data into list
+- ###### now only Traditional Chinese (Maybe I'll consider add option to choose)
+- Calculate price in app
+- (wip) Edit & delete data in list
+- (wip) Sort data with type
+- (wip) Change UI as you like
+---
+# From one of the authors
+nice project, nice teammate, what a beautiful day.
